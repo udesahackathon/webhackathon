@@ -1,41 +1,48 @@
-# HackUDESA landing
+# AI Hackathon @ UdeSA
 
-Landing estática simple para publicar rápido en Vercel.
+Landing page del primer AI Hackathon de la Universidad de San Andrés.
+
+Por ahora es una landing simple orientada a **sponsors** (todavía no hay
+inscripción de estudiantes ni tracks definidos — se suman más adelante).
+
+## Stack
+
+- [Next.js 15](https://nextjs.org/) (App Router) + TypeScript
+- Tailwind CSS v4 + [shadcn/ui](https://ui.shadcn.com/)
+- [Framer Motion](https://motion.dev/) para animaciones
+- Deploy en Vercel
 
 ## Qué editar primero
 
-Abrí [site.js](/Users/athinasalim/hackudesa/webhackathon/site.js) y cambiá:
+Todo el contenido editable (nombre del evento, fechas, ubicación, links,
+copy de SEO, cronograma, organizadoras) vive en
+[`src/lib/config.ts`](src/lib/config.ts). Cambiá los valores ahí, no en los
+componentes.
 
-- `eventDate`
-- `eventLocation`
-- `register`
-- `instagram`
-- `contactEmail`
-- `sponsorDeck`
+Buscá `[FALTA COPY]` en el código para encontrar los placeholders que
+todavía faltan completar (roles de organizadoras, dominio de mail de
+sponsors, Instagram).
 
-Si quieren cambiar textos largos, también están centralizados ahí.
+No hay sponsors ni premios confirmados todavía, así que esas secciones
+muestran placeholders ("TBA", "Your logo here") a propósito — no inventé
+nombres ni logos.
 
-## Preview local
-
-Como es un sitio estático, pueden abrir `index.html` directo en el navegador o
-levantar un server simple. Por ejemplo:
+## Desarrollo local
 
 ```bash
-npx serve .
+npm install
+npm run dev
 ```
 
-## Deploy en Vercel
+Abrí [http://localhost:3000](http://localhost:3000).
 
-1. Suban este repo a GitHub.
-2. Entren a Vercel y hagan `Add New Project`.
-3. Importen el repo.
-4. Como no hay framework ni build step, Vercel lo publica directo.
+## Build
 
-## Qué les conviene definir mañana
+```bash
+npm run build
+```
 
-- Nombre final del evento
-- Fecha y duración
-- Lugar
-- Formulario de inscripción
-- Mail o Instagram de contacto
-- Si van a mostrar sponsors confirmados o solo "partners soon"
+## Sitio anterior
+
+La versión estática original (HTML/CSS/JS plano) quedó archivada en
+[`/legacy`](legacy) para referencia, no se usa en el deploy actual.

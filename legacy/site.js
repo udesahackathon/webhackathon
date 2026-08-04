@@ -18,8 +18,8 @@ const siteContent = {
     register:
       "https://docs.google.com/forms/d/e/1FAIpQLSfSDCeTjiHXNEBx_c_W7hO_ZUqF_Phsp4_WgNf_-kkCr0WVJw/viewform?usp=publish-editor",
     sponsorDeck:
-      "mailto:hackathonudesa@gmail.com?subject=Quiero%20auspiciar%20HackUDESA",
-    contactEmail: "mailto:hackathonudesa@gmail.com",
+      "mailto:naomicouriel@gmail.com?subject=Quiero%20ser%20sponsor%20del%20HackUDESA",
+    contactEmail: "mailto:naomicouriel@gmail.com",
   },
 };
 

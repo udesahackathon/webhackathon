@@ -1,0 +1,84 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+
+  /* AI Hackathon @ UdeSA brand palette */
+  --color-navy: #1e3a5f;
+  --color-navy-dark: #0f2240;
+  --color-cardo: #6fa63c;
+  --color-cream: #f7f5ef;
+  --color-ink: #0f172a;
+
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* Sitio de una sola paleta oscura — sin toggle de tema, como el original. */
+:root {
+  --background: #0f2240;
+  --foreground: #f7f5ef;
+  --card: rgba(247, 245, 239, 0.055);
+  --card-foreground: #f7f5ef;
+  --popover: #16294a;
+  --popover-foreground: #f7f5ef;
+  --primary: #6fa63c;
+  --primary-foreground: #0f172a;
+  --secondary: rgba(247, 245, 239, 0.08);
+  --secondary-foreground: #f7f5ef;
+  --muted: rgba(247, 245, 239, 0.05);
+  --muted-foreground: rgba(247, 245, 239, 0.62);
+  --accent: #6fa63c;
+  --accent-foreground: #0f172a;
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: rgba(247, 245, 239, 0.12);
+  --input: rgba(247, 245, 239, 0.16);
+  --ring: #6fa63c;
+  --radius: 0.625rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    color: var(--foreground);
+    background-color: var(--background);
+    background-image:
+      radial-gradient(circle at 12% 8%, rgba(111, 166, 60, 0.16), transparent 24%),
+      radial-gradient(circle at 88% 14%, rgba(125, 196, 255, 0.12), transparent 22%),
+      radial-gradient(circle at 50% 100%, rgba(111, 166, 60, 0.08), transparent 30%);
+    background-attachment: fixed;
+  }
+}
