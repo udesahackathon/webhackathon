@@ -61,7 +61,7 @@ export const siteConfig = {
       description: "Premios y créditos de las mejores empresas de IA del mundo para los equipos ganadores.",
     },
   ],
-  // No hay sponsors confirmados todavía — se muestran placeholders, no inventar logos.
+  // No hay sponsors confirmados todavía, se muestran placeholders, no inventar logos.
   sponsorTiers: [
     { name: "Powered by", slots: 5 },
     { name: "Supported by", slots: 4 },

@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-// Ícono placeholder propio del evento (no el escudo de UdeSA — no tenemos
+// Ícono placeholder propio del evento (no el escudo de UdeSA, no tenemos
 // el asset oficial). Reemplazar por un ícono de marca definitivo cuando
 // exista uno.
 export const size = { width: 32, height: 32 };

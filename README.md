@@ -3,7 +3,7 @@
 Landing page del primer AI Hackathon de la Universidad de San Andrés.
 
 Por ahora es una landing simple orientada a **sponsors** (todavía no hay
-inscripción de estudiantes ni tracks definidos — se suman más adelante).
+inscripción de estudiantes ni tracks definidos, se suman más adelante).
 
 ## Docs internas
 
@@ -29,7 +29,7 @@ todavía faltan completar (roles de organizadoras, dominio de mail de
 sponsors, Instagram).
 
 No hay sponsors ni premios confirmados todavía, así que esas secciones
-muestran placeholders ("TBA", "Your logo here") a propósito — no inventé
+muestran placeholders ("TBA", "Your logo here") a propósito, no inventé
 nombres ni logos.
 
 ## Desarrollo local
