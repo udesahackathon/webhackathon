@@ -42,7 +42,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-/* Sitio de una sola paleta oscura — sin toggle de tema, como el original. */
+/* Sitio de una sola paleta oscura, sin toggle de tema, como el original. */
 :root {
   --background: #0f2240;
   --foreground: #f7f5ef;
