@@ -5,6 +5,11 @@ Landing page del primer AI Hackathon de la Universidad de San Andrés.
 Por ahora es una landing simple orientada a **sponsors** (todavía no hay
 inscripción de estudiantes ni tracks definidos — se suman más adelante).
 
+## Docs internas
+
+Las notas de organización (hardware de robótica que nos ofrecieron, créditos de
+AWS a pedir) están en [`/docs`](docs). No se publican en el sitio.
+
 ## Stack
 
 - [Next.js 15](https://nextjs.org/) (App Router) + TypeScript
