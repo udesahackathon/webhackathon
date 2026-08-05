@@ -84,18 +84,24 @@ export const siteConfig = {
   organizers: [
     {
       name: "Naomi Couriel",
-      // [FALTA COPY] confirmar rol
-      role: "[FALTA COPY]",
+      role: "Lead Organizer",
+      photo: "/organizers/naomi.jpg",
+      linkedin: "https://www.linkedin.com/in/naomi-couriel/",
+      instagram: "https://www.instagram.com/naointech/",
     },
     {
       name: "Ana Paula Tissera",
-      // [FALTA COPY] confirmar rol
-      role: "[FALTA COPY]",
+      role: "Co-Organizer",
+      photo: "/organizers/ana-paula.jpg",
+      linkedin: "https://www.linkedin.com/in/ana-paula-tissera/",
+      instagram: undefined as string | undefined,
     },
-        {
+    {
       name: "Athina Salim",
-      // [FALTA COPY] confirmar rol
-      role: "[FALTA COPY]",
+      role: "Organizer",
+      photo: "/organizers/athina.jpg",
+      linkedin: "https://www.linkedin.com/in/athina-salim-a60b61353/",
+      instagram: undefined as string | undefined,
     },
   ],
   footer: {

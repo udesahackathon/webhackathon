@@ -25,8 +25,7 @@ copy de SEO, cronograma, organizadoras) vive en
 componentes.
 
 Buscá `[FALTA COPY]` en el código para encontrar los placeholders que
-todavía faltan completar (roles de organizadoras, dominio de mail de
-sponsors, Instagram).
+todavía faltan completar (dominio de mail de sponsors).
 
 No hay sponsors ni premios confirmados todavía, así que esas secciones
 muestran placeholders ("TBA", "Your logo here") a propósito, no inventé
