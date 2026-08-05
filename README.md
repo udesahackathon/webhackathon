@@ -42,6 +42,27 @@ Abrí [http://localhost:3000](http://localhost:3000).
 npm run build
 ```
 
+## Si algo se rompe
+
+```bash
+npm run clean   # borra .next y .next-dev
+npm run dev
+```
+
+Casi todos los errores raros de arranque son un directorio de salida a medias.
+Los dos síntomas conocidos son:
+
+- `ENOENT: no such file or directory, open '.next/routes-manifest.json'`
+- `Cannot find module for page: /_document` (en `next build`)
+
+Los dos venían de correr `next dev` y `next build` sobre el mismo directorio
+`.next`. Desde [`next.config.ts`](next.config.ts) el dev server escribe en
+`.next-dev` y el build en `.next`, así que ya no pueden pisarse. `npm run clean`
+queda igual para cualquier otro estado sucio.
+
+Aparte, si ves `Port 3000 is in use`, Next arranca solo en el 3001 y funciona
+igual. Para saber quién está ocupando el puerto: `ss -tlnp | grep :3000`.
+
 ## Sitio anterior
 
 La versión estática original (HTML/CSS/JS plano) quedó archivada en
