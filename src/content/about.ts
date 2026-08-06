@@ -21,4 +21,12 @@ export const about: AboutItem[] = [
     description:
       "Premios y créditos de las mejores empresas de IA del mundo para los equipos ganadores.",
   },
+  {
+    // El track corre en simulación a propósito: así el número de robots no
+    // limita el número de equipos. No prometer modelos ni cantidades acá
+    // hasta que el hardware esté confirmado por escrito.
+    title: "Track de robótica",
+    description:
+      "Corre entero en simulación, así que se compite sin tener hardware propio. Los robots físicos se anuncian más adelante.",
+  },
 ];

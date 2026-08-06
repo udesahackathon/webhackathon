@@ -7,7 +7,7 @@
 export const event = {
   name: "AI Hackathon @ UdeSA",
   tagline:
-    "Un fin de semana intenso: de kickoff a pitches finales en un solo sprint de 24 horas",
+    "Un fin de semana intenso de IA y robótica: de kickoff a pitches finales en un solo sprint de 24 horas",
   dateLabel: "23-24 Octubre 2026",
   // ISO 8601 con timezone de Buenos Aires, usado por el countdown.
   startDateISO: "2026-10-23T18:00:00-03:00",
@@ -19,7 +19,7 @@ export const event = {
 export const seo = {
   title: "AI Hackathon @ UdeSA · 23-24 Oct 2026",
   description:
-    "23-24 de octubre 2026 en la Universidad de San Andrés, Buenos Aires. Sumate como sponsor.",
+    "Hackathon de IA y robótica. 23-24 de octubre 2026 en la Universidad de San Andrés, Buenos Aires. Sumate como sponsor.",
 };
 
 export const contact = {

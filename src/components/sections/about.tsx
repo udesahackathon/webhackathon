@@ -8,7 +8,7 @@ export function About() {
     <Section id={sectionIds.about}>
       <SectionHeading {...aboutHeading} />
 
-      <div className="grid gap-6 sm:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {about.map((item) => (
           <Card key={item.title} className="backdrop-blur-sm">
             <CardHeader>
