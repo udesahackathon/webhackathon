@@ -5,7 +5,9 @@ documentación oficial de AWS vigente a esa fecha. Los precios y la disponibilid
 de servicios cambian, reconfirmar antes de mandar el pedido.
 
 La pregunta que responde este doc: si pedimos créditos de AWS para los
-participantes, ¿para qué servicio y cuánto?
+participantes, ¿para qué servicio y cuánto? Para el análisis completo (con
+estimaciones de costo por modelo y las fuentes), ver
+[`/docs/dimos-notes/07-hackathon-aws-credits.md`](dimos-notes/07-hackathon-aws-credits.md).
 
 ## Respuesta corta
 

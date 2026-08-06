@@ -114,7 +114,8 @@ funcionen. Como track opcional con premio propio, suma mucho y no arriesga nada.
 
 ## Notas más largas
 
-Ana tiene notas completas de la arquitectura del repo (7 documentos: core,
-transportes, capa agéntica, subsistemas, CLI, ingeniería, más el análisis de
-AWS) fuera de este repo. Si hace falta profundizar en algo puntual, pedírselas
-antes de volver a leer el repo de cero.
+Notas completas de la arquitectura del repo (core, transportes, capa agéntica,
+subsistemas, CLI, ingeniería, más el análisis de créditos de AWS) en
+[`/docs/dimos-notes`](dimos-notes). Escritas el 2026-08-03 sobre el commit
+`0f9b161`. Si hace falta profundizar en algo puntual del código de DimOS,
+arrancar ahí antes de volver a leer el repo de cero.
