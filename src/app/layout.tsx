@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Fraunces, Geist_Mono } from "next/font/google";
-import { siteConfig } from "@/lib/config";
+import { seo } from "@/content/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,17 +20,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "http://localhost:3000";
+// `metadataBase` es la base con la que Next arma las URLs absolutas de la OG
+// image. Ojo con `VERCEL_URL`: en Vercel apunta a la URL única del deploy (un
+// hash distinto en cada build), no al dominio de producción, así que un link
+// compartido terminaba pidiendo la imagen a un deploy viejo.
+// `VERCEL_PROJECT_PRODUCTION_URL` sí es el dominio estable del proyecto.
+// Cuando haya dominio propio, se setea `NEXT_PUBLIC_SITE_URL` en Vercel y gana.
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "http://localhost:3000");
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: siteConfig.seo.title,
-  description: siteConfig.seo.description,
+  title: seo.title,
+  description: seo.description,
   openGraph: {
-    title: siteConfig.seo.title,
-    description: siteConfig.seo.description,
+    title: seo.title,
+    description: seo.description,
     locale: "es_AR",
     type: "website",
   },
