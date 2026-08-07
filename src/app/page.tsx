@@ -1,11 +1,14 @@
-import { About } from "@/components/about";
-import { Hero } from "@/components/hero";
-import { Organizers } from "@/components/organizers";
-import { Prizes } from "@/components/prizes";
-import { Schedule } from "@/components/schedule";
-import { SiteFooter } from "@/components/site-footer";
-import { Sponsors } from "@/components/sponsors";
+import { SiteFooter } from "@/components/layout/site-footer";
+import { About } from "@/components/sections/about";
+import { Hero } from "@/components/sections/hero";
+import { Organizers } from "@/components/sections/organizers";
+import { Prizes } from "@/components/sections/prizes";
+import { Schedule } from "@/components/sections/schedule";
+import { Sponsors } from "@/components/sections/sponsors";
 
+// El orden de las secciones de la landing se define acá y nada más. Para sumar
+// una nueva: archivo en `src/content`, componente en `src/components/sections`,
+// y la línea correspondiente en esta lista.
 export default function Home() {
   return (
     <>

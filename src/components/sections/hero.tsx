@@ -1,8 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Countdown } from "@/components/countdown";
-import { siteConfig } from "@/lib/config";
+import { SiteHeader } from "@/components/layout/site-header";
+import { Countdown } from "@/components/shared/countdown";
+import { heroCtaPrimary, heroCtaSecondary, heroTimeline } from "@/content/hero";
+import { sectionIds } from "@/content/navigation";
+import { event } from "@/content/site";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 16 },
@@ -14,12 +17,10 @@ const fadeUp = {
 };
 
 export function Hero() {
-  const { event, hero, heroTimeline, nav } = siteConfig;
-
   return (
     <div className="mx-auto max-w-6xl px-4 pt-6 sm:px-6 sm:pt-8">
       <section
-        id="top"
+        id={sectionIds.top}
         className="relative overflow-hidden rounded-[32px] border border-cream/10 bg-gradient-to-br from-[#16294a] to-[#0a1730] shadow-[0_40px_120px_-40px_rgba(0,0,0,0.7)]"
       >
         <div
@@ -36,27 +37,7 @@ export function Hero() {
         />
 
         <div className="relative z-10 px-6 pt-6 pb-10 sm:px-10 sm:pt-8 sm:pb-16">
-          <nav className="flex items-center justify-between gap-4">
-            <a href="#top" className="flex items-center gap-2 text-sm font-medium tracking-tight text-cream">
-              <span className="h-2.5 w-2.5 rounded-full bg-cardo" aria-hidden />
-              {event.name}
-            </a>
-            <div className="flex items-center gap-6">
-              <div className="hidden items-center gap-6 text-sm text-cream/70 sm:flex">
-                {nav.map((item) => (
-                  <a key={item.href} href={item.href} className="hover:text-cream">
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-              <a
-                href={hero.ctaPrimary.href}
-                className="inline-flex h-9 items-center rounded-full bg-cardo px-4 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5"
-              >
-                {hero.ctaPrimary.label}
-              </a>
-            </div>
-          </nav>
+          <SiteHeader />
 
           <div className="mt-16 grid gap-12 sm:mt-24 lg:grid-cols-[1.15fr_0.85fr] lg:items-start">
             <div className="flex flex-col items-start">
@@ -111,16 +92,16 @@ export function Hero() {
                 className="mt-10 flex flex-wrap items-center gap-4"
               >
                 <a
-                  href={hero.ctaPrimary.href}
+                  href={heroCtaPrimary.href}
                   className="inline-flex h-12 items-center rounded-full bg-cardo px-7 text-base font-semibold text-ink shadow-[0_16px_40px_-12px_rgba(111,166,60,0.55)] transition-transform hover:-translate-y-0.5"
                 >
-                  {hero.ctaPrimary.label}
+                  {heroCtaPrimary.label}
                 </a>
                 <a
-                  href={hero.ctaSecondary.href}
+                  href={heroCtaSecondary.href}
                   className="inline-flex h-12 items-center rounded-full border border-cream/25 px-7 text-base font-medium text-cream transition-colors hover:bg-cream/10"
                 >
-                  {hero.ctaSecondary.label}
+                  {heroCtaSecondary.label}
                 </a>
               </motion.div>
             </div>
