@@ -31,6 +31,12 @@ los comentarios del código también.
 - Lo que falta definir se marca con `[FALTA COPY]` en un comentario.
 - Nada de em dashes, ni en el sitio ni en los commits.
 
+## Flujo de git
+
+- **Nunca commitear ni pushear directo a `main`.** Todo cambio va en una branch
+  y se mergea con un pull request en GitHub, aunque sea trivial. `main` solo se
+  mueve por merges de PR, nunca por push directo ni fast-forward local.
+
 ## Antes de pushear
 
 ```bash
