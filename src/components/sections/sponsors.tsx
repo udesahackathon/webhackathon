@@ -1,19 +1,19 @@
-import { siteConfig } from "@/lib/config";
+import { Section, SectionHeading } from "@/components/shared/section";
+import { sectionIds } from "@/content/navigation";
+import { contact } from "@/content/site";
+import { sponsorTiers, sponsorsHeading } from "@/content/sponsors";
+
+const mailtoHref = `mailto:${contact.sponsorEmail}?subject=${encodeURIComponent(
+  "Quiero ser sponsor del AI Hackathon @ UdeSA"
+)}`;
 
 export function Sponsors() {
   return (
-    <section id="sponsors" className="mx-auto max-w-6xl px-6 py-20 sm:px-8 sm:py-28">
+    <Section id={sectionIds.sponsors}>
       <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-        <div className="max-w-2xl">
-          <p className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-cardo">
-            Sponsors
-          </p>
-          <h2 className="font-display text-3xl italic font-normal text-cream sm:text-4xl">
-            Buscamos marcas que quieran estar cerca de engineers
-          </h2>
-        </div>
+        <SectionHeading {...sponsorsHeading} className="mb-0" />
         <a
-          href={`mailto:${siteConfig.contact.sponsorEmail}?subject=Quiero%20ser%20sponsor%20del%20AI%20Hackathon%20%40%20UdeSA`}
+          href={mailtoHref}
           className="inline-flex h-11 shrink-0 items-center rounded-full bg-cardo px-6 text-sm font-semibold text-ink transition-transform hover:-translate-y-0.5"
         >
           Become a sponsor →
@@ -21,7 +21,7 @@ export function Sponsors() {
       </div>
 
       <div className="flex flex-col gap-10">
-        {siteConfig.sponsorTiers.map((tier) => (
+        {sponsorTiers.map((tier) => (
           <div key={tier.name}>
             <p className="mb-4 text-xs font-medium uppercase tracking-[0.14em] text-cream/50">
               {tier.name}
@@ -39,6 +39,6 @@ export function Sponsors() {
           </div>
         ))}
       </div>
-    </section>
+    </Section>
   );
 }

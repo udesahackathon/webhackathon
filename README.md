@@ -1,73 +1,88 @@
 # AI Hackathon @ UdeSA
 
-Landing page del primer AI Hackathon de la Universidad de San Andrés.
+Landing del primer AI Hackathon de la Universidad de San Andrés.
 
-Por ahora es una landing simple orientada a **sponsors** (todavía no hay
-inscripción de estudiantes ni tracks definidos, se suman más adelante).
+- **Cuándo:** 23 y 24 de octubre de 2026
+- **Dónde:** Universidad de San Andrés, Buenos Aires
+- **Qué:** 24 horas, ~15 equipos de hasta 4 personas, estudiantes de
+  universidades de toda Argentina. De kickoff a pitches finales en un sprint.
 
-## Docs internas
+La landing apunta a **sponsors** por ahora. Todavía no hay inscripción de
+estudiantes ni tracks definidos.
 
-Las notas de organización (hardware de robótica que nos ofrecieron, créditos de
-AWS a pedir) están en [`/docs`](docs). No se publican en el sitio.
-
-## Stack
-
-- [Next.js 15](https://nextjs.org/) (App Router) + TypeScript
-- Tailwind CSS v4 + [shadcn/ui](https://ui.shadcn.com/)
-- [Framer Motion](https://motion.dev/) para animaciones
-- Deploy en Vercel
-
-## Qué editar primero
-
-Todo el contenido editable (nombre del evento, fechas, ubicación, links,
-copy de SEO, cronograma, organizadoras) vive en
-[`src/lib/config.ts`](src/lib/config.ts). Cambiá los valores ahí, no en los
-componentes.
-
-Buscá `[FALTA COPY]` en el código para encontrar los placeholders que
-todavía faltan completar (dominio de mail de sponsors).
-
-No hay sponsors ni premios confirmados todavía, así que esas secciones
-muestran placeholders ("TBA", "Your logo here") a propósito, no inventé
-nombres ni logos.
-
-## Desarrollo local
+## Comandos
 
 ```bash
 npm install
-npm run dev
+npm run dev         # http://localhost:3000
+
+npm run typecheck   # tipos
+npm run lint        # eslint
+npm run build       # el build real, es lo que corre Vercel
+
+npm run clean       # borra .next y .next-dev si algo quedó a medias
 ```
 
-Abrí [http://localhost:3000](http://localhost:3000).
+Deploy automático: push a `main` va a producción, cualquier otra branch levanta
+un preview.
 
-## Build
+## Stack
 
-```bash
-npm run build
+Next.js 15 (App Router) + TypeScript, Tailwind v4 + shadcn/ui, Framer Motion,
+Vercel.
+
+## Estructura
+
+```
+src/
+  app/                layout, página, favicon, OG image
+  content/            todo el texto y los datos del sitio
+  components/
+    sections/         una sección de la landing por archivo
+    layout/           header y footer
+    shared/           Section, Countdown, íconos
+    ui/               generado por shadcn, no editar a mano
+  lib/                helpers (cn)
+docs/                 notas internas de organización, no se publican
+public/organizers/    fotos y logo de UdeSA
 ```
 
-## Si algo se rompe
+Contenido en `src/content`, presentación en `src/components`. Para cambiar un
+texto, una fecha o un link no hace falta abrir un `.tsx`.
 
-```bash
-npm run clean   # borra .next y .next-dev
-npm run dev
-```
+## Qué editar
 
-Casi todos los errores raros de arranque son un directorio de salida a medias.
-Los dos síntomas conocidos son:
+| Archivo | Qué tiene |
+|---|---|
+| [`content/site.ts`](src/content/site.ts) | Nombre, fechas, ubicación, SEO, contacto, footer |
+| [`content/navigation.ts`](src/content/navigation.ts) | Los `id` de las secciones y los links del nav |
+| [`content/hero.ts`](src/content/hero.ts) | CTAs del hero y el timeline de tres pasos |
+| [`content/about.ts`](src/content/about.ts) | Tarjetas de "el evento en números" |
+| [`content/sponsors.ts`](src/content/sponsors.ts) | Tiers de sponsors |
+| [`content/schedule.ts`](src/content/schedule.ts) | Cronograma |
+| [`content/prizes.ts`](src/content/prizes.ts) | Premios y premio del sponsor |
+| [`content/people.ts`](src/content/people.ts) | Organizadoras y crédito institucional |
 
-- `ENOENT: no such file or directory, open '.next/routes-manifest.json'`
-- `Cannot find module for page: /_document` (en `next build`)
+Buscá `[FALTA COPY]` para lo que falta completar (hoy: el mail de sponsors).
 
-Los dos venían de correr `next dev` y `next build` sobre el mismo directorio
-`.next`. Desde [`next.config.ts`](next.config.ts) el dev server escribe en
-`.next-dev` y el build en `.next`, así que ya no pueden pisarse. `npm run clean`
-queda igual para cualquier otro estado sucio.
+No hay sponsors ni premios confirmados, así que esas secciones muestran "TBA" y
+"Your logo here" a propósito. No inventar nombres ni logos.
 
-Aparte, si ves `Port 3000 is in use`, Next arranca solo en el 3001 y funciona
-igual. Para saber quién está ocupando el puerto: `ss -tlnp | grep :3000`.
+## Agregar una sección
 
-## Sitio anterior
+1. Sumá su id a `sectionIds` en `content/navigation.ts` (y a `nav` si va arriba).
+2. Creá su archivo en `src/content/` con el heading y los datos.
+3. Creá el componente en `components/sections/`, dentro de
+   `<Section id={sectionIds.loQueSea}>` y con `<SectionHeading />` arriba.
+4. Sumalo a la lista de [`src/app/page.tsx`](src/app/page.tsx).
 
-La versión estática original (HTML/CSS/JS plano) quedó archivada en
-[`/legacy`](legacy) para referencia, no se usa en el deploy actual.
+## Notas
+
+- **Errores raros al arrancar** (`ENOENT: .next/routes-manifest.json`,
+  `Cannot find module for page: /_document`): `npm run clean` y de nuevo. El dev
+  server escribe en `.next-dev` y el build en `.next` para que no se pisen, ver
+  [`next.config.ts`](next.config.ts).
+- **`Port 3000 is in use`:** Next arranca solo en el 3001. Para ver quién lo
+  tiene: `ss -tlnp | grep :3000`.
+- **Sitio viejo:** la versión estática original está en el historial, en el
+  commit `e688668`.
