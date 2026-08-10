@@ -180,6 +180,23 @@ Si varios módulos matchean el spec, se resuelve con `.remappings()`.
 Si un módulo está deshabilitado, se inyecta un `DisabledModuleProxy` que loguea y devuelve
 `None` en cualquier método (no-op).
 
+### Las refs a clase matchean por IS-A
+
+Desde `8fac510` (2026-08-08), una ref a clase concreta la satisface **cualquier subclase**, no
+solo la clase exacta:
+
+```python
+def satisfies(cls: type) -> bool:
+    if is_class_ref:
+        return isinstance(cls, type) and issubclass(cls, spec)
+    return spec_structural_compliance(cls, spec)
+```
+
+Antes comparaba con `cls is spec`. Eso rompía el patrón de "sustituir el provider por una
+subclase que agrega puertos": la ref quedaba en `None` sin error al cablear, y explotaba con
+`AttributeError` recién en el primer uso. Es el fix que habilita subclasear el
+`ControlCoordinator` para declarar I/O por deployment (ver [04-subsistemas.md](04-subsistemas.md)).
+
 ## Runtime y coordinación
 
 ### ModuleCoordinator
@@ -247,7 +264,7 @@ Cada campo se convierte automáticamente en flag de CLI (ver [05-cli-y-uso.md](0
 | Archivo | Qué hace |
 |---|---|
 | `core/core.py` | el decorador `@rpc` |
-| `core/native_module.py` | `NativeModule`, ver [06-ingenieria-y-repo.md](06-ingenieria-y-repo.md) |
+| `core/native_module.py` | `NativeModule`, ver [06-ingenieria-y-repo.md](06-ingenieria-y-repo.md). El flag `build_native` se lee de `self.config.g`, no del singleton global (fix `7a0a970`) |
 | `core/rpc_client.py` | `RPCClient`, `RpcCall` |
 | `core/run_registry.py` | tracking por run + rutas de logs |
 | `core/resource.py` | `Resource` y `CompositeResource` (base de módulos y transportes) |

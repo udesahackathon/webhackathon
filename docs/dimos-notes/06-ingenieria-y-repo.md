@@ -152,7 +152,8 @@ Cadencia de aproximadamente un release cada 1-2 meses.
 | `eclipse-zenoh` | transporte Zenoh |
 | `pin` (Pinocchio) | cinemática |
 | `reactivex` | los streams observables |
-| `plum-dispatch` | multi-dispatch en los constructores de mensajes |
+| `plum-dispatch` | multi-dispatch. **Ya no se usa en los constructores de mensajes**: `016405b` los pasó a `typing.overload` por performance. Sigue como dependencia por otros usos |
+| `pin-pink` + `qpsolvers[proxqp]` | IK con Pink en las tareas de control. Pasaron del extra `manipulation` a core en 2026-08 |
 | `numba` + `llvmlite` | cálculo de occupancy |
 | `open3d` | voxels y point clouds |
 | `opencv-contrib-python` | trackers CSRT de `cv2.legacy` (solo están en contrib) |
