@@ -106,33 +106,51 @@ Reimplementa **nativamente** las familias de mensajes de ROS:
 
 Cada tipo **hereda del binding LCM** (`dimos_lcm`) y le agrega ergonomía Python encima:
 
-- Constructores **multi-dispatch** con `plum-dispatch`. Por ejemplo `Twist` acepta vectores,
-  Quaternion, otro Twist, un LCMTwist o kwargs.
+- Constructores **sobrecargados**: el mismo tipo acepta varias formas de llamada. Por ejemplo
+  `Pose` acepta nada, `(x,y,z)`, `(x,y,z,qx,qy,qz,qw)`, una posición sola, posición +
+  orientación, un par, un dict, otro `Pose` o un `LCMPose`.
 - Operadores: `+`, `-`, `__eq__`, `__bool__`, `__repr__`, `__str__`.
 - Helpers: `Twist.zero()`, `.is_zero()`, `Image.from_numpy(...)`, `img.brightness`, `img.sharpness`.
 
-Ejemplo real (`msgs/geometry_msgs/Twist.py`):
+Ejemplo real (`msgs/geometry_msgs/Pose.py`):
 
 ```python
-class Twist(LCMTwist):
-    linear: Vector3
-    angular: Vector3
-    msg_name = "geometry_msgs.Twist"
+class Pose(LCMPose):
+    position: Vector3
+    orientation: Quaternion
+    msg_name = "geometry_msgs.Pose"
 
-    @dispatch
+    @overload
     def __init__(self) -> None: ...
-    @dispatch
-    def __init__(self, linear: VectorLike, angular: VectorLike) -> None: ...
-    @dispatch
-    def __init__(self, linear: VectorLike, angular: Quaternion) -> None: ...  # convierte a euler
-    @dispatch
-    def __init__(self, twist: Twist) -> None: ...        # copy constructor
-    @dispatch
-    def __init__(self, lcm_twist: LCMTwist) -> None: ...
+    @overload
+    def __init__(self, x: int | float, y: int | float, z: int | float) -> None: ...
+    @overload
+    def __init__(self, position=..., orientation=...) -> None: ...
+    @overload
+    def __init__(self, value: PoseConvertable | Pose, /) -> None: ...
 
-    def __bool__(self) -> bool:
-        return not self.is_zero()   # un Twist cero es falsy
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        ...   # discrimina a mano las formas de arriba
 ```
+
+### Se fue plum-dispatch (2026-08-08)
+
+Hasta `016405b` estos constructores estaban implementados con `@dispatch` de **plum-dispatch**,
+que resuelve el overload por tipos en runtime. Se reemplazó por `@typing.overload` más un
+`__init__(*args, **kwargs)` que discrimina a mano, por performance: estos mensajes se construyen
+dentro de loops de control y plum pagaba resolución de tipos en cada construcción.
+
+**La API pública no cambió**: las mismas formas de llamada siguen andando, y el commit sumó
+`test_msg_construction.py` (785 líneas) que las fija todas. Lo que sí cambió es la robustez
+interna: aparecieron helpers de desambiguación como `_is_position_orientation_pair`, que
+distinguen un par `(posición, orientación)` de una posición 2D mirando si los elementos son
+numéricos. Es más frágil que el dispatch por tipos.
+
+Alcanzó a `Pose`, `Quaternion`, `Twist`, `JointState`, `Joy`, los `*Stamped` y los
+`*WithCovariance`. `plum` sigue listado en el pyproject (queda uso en otros lados).
+
+`Wrench` y `WrenchStamped` sumaron encode/decode LCM propios en `7a5a844`; antes no serializaban
+sobre el transporte.
 
 `msgs/sensor_msgs/image_impls/` tiene implementaciones alternativas del backend de imagen.
 `msgs/protocol.py` define `DimosMsg`, el protocolo común. `msgs/helpers.py` tiene utilidades.

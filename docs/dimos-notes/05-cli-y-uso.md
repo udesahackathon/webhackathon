@@ -30,8 +30,19 @@ dimos --replay run unitree-go2
 
 Extras disponibles: `base`, `misc`, `visualization`, `learning`, `agents`, `web`, `perception`,
 `unitree`, `unitree-dds`, `manipulation`, `cpu`, `cuda`, `sim`, `mapping`, `drone`, `dds`,
-`webrtc`, `apriltag`, `scene`, `all`. Más grupos de dev: `autofix`, `project-deps`, `tests`,
-`browser-tests`, `lint`, `tests-self-hosted`.
+`webrtc`, `apriltag`, `scene`, `graspgenx`, `all`. Más grupos de dev: `autofix`, `project-deps`,
+`tests`, `browser-tests`, `lint`, `tests-self-hosted`.
+
+### Cuidado con las dependencias (estado al 2026-08-08)
+
+- `pin-pink` y `qpsolvers[proxqp]` **pasaron del extra `manipulation` a dependencias core**, así
+  que ahora los instala cualquier `pip install dimos`. Es porque las tareas de IK del control
+  loop usan Pink y `control/` no es un extra.
+- `roboplan` está **pineado exacto** a `0.5.1` (antes `>=0.5.1`): la integración de TOPP-RA está
+  validada solo contra esa versión.
+- `graspgenx` **no entra en `all`**, se instala desde un revision fijo de git de NVlabs (no de
+  PyPI) y pisa siete dependencias del stack con `override-dependencies`. Es la instalación más
+  frágil del repo, tratarla aparte.
 
 ### Desarrollo
 
@@ -75,7 +86,7 @@ dimos run <blueprint> [--daemon]   # arrancar, opcionalmente en background
 dimos status                       # run ID, PID, blueprint, uptime, ruta de log
 dimos stop [--force]               # SIGTERM → SIGKILL a los 5s; --force = SIGKILL directo
 dimos restart [--force]            # stop + re-exec con los args originales
-dimos list                         # lista los blueprints no-demo (274 registrados)
+dimos list                         # lista los blueprints no-demo (279 registrados)
 dimos show-config                  # imprime el GlobalConfig resuelto
 dimos cache clean [--yes]          # borra caches regenerables
 ```
@@ -116,6 +127,16 @@ dimos apriltag             # detección de AprilTags (hay apriltag3d.py también
 dimos rerun-bridge         # lanza la visualización Rerun standalone
 dimos dataprep build       # construye datasets de imitation learning
 dimos dataprep inspect
+```
+
+### Hardware (nuevo en `a6d65f0`)
+
+`dimos hardware` agrupa diagnóstico y configuración de hardware. Por ahora solo cuelga el A1Z:
+
+```bash
+dimos hardware a1z doctor --software-only   # chequea la instalación sin tocar el host
+dimos hardware a1z configure-can            # configura la interfaz CAN (pide confirmación, usa sudo)
+bin/hardware/a1z/setup                      # setup guiado del checkout, muestra el plan antes de aplicarlo
 ```
 
 ### Rutas
@@ -176,7 +197,17 @@ Referencia rápida de agénticos:
 | `teleop-quest-xarm7` | xArm7 | real | no | no |
 | `dual-xarm6-planner-coordinator` | xArm6 x2 | mock | no | no |
 
-Hay 274 blueprints registrados en total. `dimos list` da la lista completa.
+Hay 279 blueprints registrados en total. `dimos list` da la lista completa.
+
+Los 5 que se sumaron entre el 2026-08-03 y el 2026-08-08:
+
+| Blueprint | Qué es |
+|---|---|
+| `teleop-quest-hand-xarm7` | teleop de xArm7 con manos de Quest, pinch para enganchar |
+| `teleop-quest-a1z` | teleop de A1Z por Quest (`dimos --can-port a1zcan run teleop-quest-a1z` con hardware real) |
+| `coordinator-teleop-a1z` | coordinator de teleop para A1Z |
+| `grasp-gen-x-module` | provider de grasps GraspGenX (requiere el extra `graspgenx`) |
+| `hand-teleop-module` | `HandTeleopModule`, el módulo detrás del teleop por manos |
 
 ---
 

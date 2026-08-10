@@ -70,7 +70,7 @@ directamente corte) al llegar a un umbral.
 
 ### Orden de magnitud del pedido
 
-Estimación ilustrativa, no una cotización — confirmar con la calculadora oficial de precios
+Estimación ilustrativa, no una cotización, confirmar con la calculadora oficial de precios
 antes de poner un número en el pedido:
 
 - Supuestos: 30 equipos, 2 días de hackathon, ~200 llamadas al agente por equipo por día,
@@ -108,8 +108,8 @@ por los organizadores, no como crédito per cápita repartido a todos los equipo
 
 ## Bedrock AgentCore: idea de stretch, no infraestructura de base
 
-GA desde octubre 2025. Es agnóstico de framework y modelo, y soporta explícitamente LangGraph
-— justo lo que usa `McpClient` (vía `create_agent` de `langchain.agents`). Incluye Runtime
+GA desde octubre 2025. Es agnóstico de framework y modelo, y soporta explícitamente LangGraph,
+que es justo lo que usa `McpClient` (vía `create_agent` de `langchain.agents`). Incluye Runtime
 (hosting serverless del agente), Memory, Gateway (para exponer tools) y Observability.
 
 No lo pediría como infraestructura para todos los equipos, pero es un lindo track o premio
@@ -120,18 +120,18 @@ con la arquitectura existente (mismo LangGraph, mismo concepto de tools), no un 
 ## Cómo conseguir el crédito en la práctica
 
 El mecanismo de "$100 de crédito por participante" que se ve en hackathons patrocinadas por AWS
-(vía Devpost, etc.) **existe solo si AWS ya es sponsor del evento** — no es algo que un
+(vía Devpost, etc.) **existe solo si AWS ya es sponsor del evento**, no es algo que un
 organizador pida suelto y le llegue. Caminos reales, de más a menos directo:
 
-1. **AWS Event Sponsorship** (`aws.amazon.com/events/sponsorship`) — mayormente canalizado a
+1. **AWS Event Sponsorship** (`aws.amazon.com/events/sponsorship`), mayormente canalizado a
    través de partners de la AWS Partner Network (APN). Vale la pena chequear primero si
    dimensionalOS (el partner de hardware) o la institución organizadora ya tienen alguna
    relación con AWS. Un contacto tibio ahorra mucho tiempo contra un formulario frío.
-2. **AWS Cloud Credit for Research** (`pages.awscloud.com/aws-cloud-credit-for-research.html`)
-   — si hay ángulo universitario/de investigación. El ciclo de revisión suele ser más lento que
+2. **AWS Cloud Credit for Research** (`pages.awscloud.com/aws-cloud-credit-for-research.html`),
+   si hay ángulo universitario/de investigación. El ciclo de revisión suele ser más lento que
    el timing de un hackathon, así que conviene aplicar en paralelo y temprano, no como último
    recurso.
-3. **AWS Educate** — sigue viva pero desde 2023 dejó de dar créditos institucionales directos;
+3. **AWS Educate**, sigue viva pero desde 2023 dejó de dar créditos institucionales directos;
    hoy es training gratuito autogestionado. No es un canal confiable para presupuesto real de
    evento.
 4. **Plan B si el crédito no llega a tiempo**: como Bedrock es pago por uso y los modelos chicos

@@ -137,6 +137,19 @@ premap exportado en runtime (`unitree-go2-relocalization`).
 | `experimental/spatial_vector_db.py`, `spatial_perception.py` | percepción espacial |
 | `experimental/objectDB.py`, `moduleDB.py`, `image_embedding.py` | bases de objetos y embeddings |
 | `experimental/perceive_loop_skill.py` | skill de loop de percepción |
+| `detection/project.py` | `ProjectDepthTo3D` y `sees()`: proyecta a 3D streams de detecciones 2D **grabados**. Se engancha como `Transformer` de memory2, o sea que corre sobre pipelines lazy |
+| `memory/tool_localize.py` | script ejecutable: busca un objeto por texto en una grabación, lo localiza en 3D con depth y lo renderiza en Rerun |
+
+`96b7aff` ("kickstart for scene reconstruction") sumó las dos últimas piezas. `tool_localize`
+encadena CLIP + EdgeTAM + Moondream sobre un `SqliteStore` de memory2, y sirve como ejemplo
+completo de cómo se combinan percepción y memoria:
+
+```bash
+uv run python -m dimos.perception.memory.tool_localize "plant" out.rrd
+```
+
+Datasets nuevos en LFS: `sf_office_stairs.db` (stereo D455) y `spot_small_loop.db` (primer
+dataset de Spot del repo).
 
 ---
 
@@ -237,20 +250,74 @@ class Go2Memory(Recorder):
 | Área | Contenido |
 |---|---|
 | `planning/kinematics/` | IK con 4 backends: `drake_optimization_ik.py`, `pinocchio_ik.py`, `pink_ik.py`, `jacobian_ik.py` |
-| `planning/planners/` | `rrt_planner.py`, `selected_joint_space.py`, config |
+| `planning/planners/` | `rrt_planner.py`, `roboplan_planner.py`, `selected_joint_space.py`, config |
 | `planning/world/` | `drake_world.py`, `roboplan_world.py`, `roboplan_model.py` |
 | `planning/groups/` | planning groups: discovery, identifiers, models, registry |
 | `planning/monitor/` | `robot_state_monitor.py`, `world_monitor.py`, `world_obstacle_monitor.py` |
 | `planning/spec/` | config, enums, models, protocols, validation |
-| `planning/trajectory_generator/` | generador de trayectorias articulares |
+| `planning/trajectory_generator/` | parametrización de paths a trayectorias con tiempo (ver abajo) |
 | `control/servo_control/` | `cartesian_motion_controller.py` |
 | `control/trajectory_controller/` | `joint_trajectory_controller.py` |
-| `grasping/` | generación y visualización de grasps |
+| `grasping/` | generación y visualización de grasps, más el provider GraspGenX |
 | `pick_and_place_module.py`, `manipulation_module.py`, `execution_manager.py` | orquestación |
 
-El `CONTEXT.md` de la raíz del repo define el vocabulario de este dominio: Cartesian Waypoint,
-Cartesian Target (absoluto vs relativo), Cartesian Path Configuration, Standard Cartesian
-Planning, Bounded Speed Mode vs Time-Optimal Speed Mode, Custom Planner Components.
+Había un `CONTEXT.md` en la raíz del repo que definía el vocabulario del dominio (Cartesian
+Waypoint, Cartesian Target absoluto vs relativo, Bounded Speed Mode vs Time-Optimal Speed Mode,
+Custom Planner Components). Se **borró** en `d6cf473` y no se reubicó en ningún lado: ese
+glosario ya no existe en el repo.
+
+### La frontera path → trayectoria
+
+Cambio de diseño de `d6cf473`, la parte más importante de este subsistema hoy.
+
+Un planner de joint space devuelve un **path geométrico sin tiempo**. Antes de que DimOS acepte
+un `GeneratedPlan`, un backend de parametrización lo convierte en un `JointTrajectory` con
+tiempos, y se valida orden de joints, dimensiones, valores finitos, tiempo estrictamente
+creciente, y que se preserven start y goal.
+
+| Backend | Default con | Qué hace |
+|---|---|---|
+| `simple_trapezoid` | `DrakeWorld` | trapezoidal por segmentos (comportamiento previo) |
+| `roboplan_toppra` | `RoboPlanWorld` | TOPP-RA, timing continuo sobre el path entero |
+
+```python
+ManipulationModuleConfig(
+    world_backend="roboplan",
+    trajectory_parametrization={"backend": "roboplan_toppra",
+                                "output_period": 0.01,
+                                "velocity_scale": 0.8},
+)
+```
+
+Reglas que conviene tener presentes:
+
+- **No hay fallback.** Si el parametrizador elegido falla, no se intenta otro y no queda plan
+  ejecutable cacheado.
+- Si el planner ya devuelve timestamps y velocidades, se saltea la parametrización y se respeta
+  su timing, pero pasa igual la validación estructural.
+- `roboplan_toppra` solo corre con `world_backend="roboplan"`; con otro world falla al arrancar.
+  Y la integración está pineada a RoboPlan `0.5.1` exacto.
+- Cada joint movible necesita límite de velocidad finito y positivo en el URDF. Si no hay
+  aceleración autorada, se inserta un fallback global de `2.0 rad/s²`, explícitamente temporal.
+- El slider "Next plan speed" de Viser (0.05 a 1.0) afecta al **próximo** plan, no al ya
+  aceptado.
+
+La frontera se expone como `TrajectoryParametrizerSpec`, al lado de `PlannerSpec` y `WorldSpec`.
+`manipulation_module.py` adelgazó fuerte (+82/-201) al perder esa lógica.
+
+### RoboPlan como planner propio
+
+`roboplan_planner.py` (681 líneas) saca la planificación de `roboplan_world.py` (que perdió 565).
+Suma shortcutting y split planner. El fix `2b6ff61` hace que planifique contra el estado del
+robot **capturado** al inicio y no releído a mitad de camino.
+
+### GraspGenX
+
+Provider de propuestas de grasp basado en el modelo de NVlabs, blueprint `grasp-gen-x-module`.
+Suma `GraspCandidate` y `GraspCandidateArray` a `manipulation_msgs`. El adapter es "import-safe":
+el runtime pesado vive aparte en `grasp_gen_x_runtime.py`. Requiere el extra `graspgenx`, que
+instala desde un revision fijo de git de NVlabs y pisa siete dependencias del stack. Es lo más
+frágil de instalar que tiene el repo.
 
 ---
 
@@ -260,12 +327,12 @@ Loop de control organizado por **tareas** intercambiables, cada una con su `_reg
 
 | Tarea | Qué controla |
 |---|---|
-| `cartesian_ik_task` | IK cartesiano |
-| `eef_twist_task` | twist del end effector |
+| `cartesian_ik_task` | IK cartesiano (resuelve con Pink desde `1bc1e97`) |
+| `eef_twist_task` | twist del end effector (idem, Pink) |
 | `servo_task` | servoing |
 | `trajectory_task` | ejecución de trayectorias |
 | `velocity_task` | control de velocidad |
-| `teleop_task` | teleoperación |
+| `teleop_task` | teleoperación (reescrita sobre Pink en `cee5cdb`) |
 | `path_follower_task` | seguimiento de path |
 | `rpp_path_follower_task` | Regulated Pure Pursuit |
 | `holonomic_pose_follower_task` | seguimiento holonómico de pose |
@@ -274,6 +341,70 @@ Loop de control organizado por **tareas** intercambiables, cada una con su `_reg
 Más: `coordinator.py`, `tick_loop.py`, `routing.py`, `hardware_interface.py`, `components.py`,
 `path_following_coordinator.py`, `velocity_profiler.py`, `velocity_tracking_pid.py`,
 `feedforward_gain_compensator.py`.
+
+El refactor de `6580b67` reescribió cómo el coordinator descubre tareas, rutea y publica estado.
+`dimos/control/README.md` quedó rehecho y es la fuente actualizada.
+
+### Task cards
+
+Cada tarea publica un manifiesto en `tasks/<task>/_registry.py`. `tasks/registry.py` los descubre
+**sin importar la tarea**, así que las deps pesadas (Pinocchio, ONNX Runtime) cargan recién cuando
+la tarea se instancia:
+
+```python
+TASK_FACTORIES = {"servo": "dimos.control.tasks.servo_task.servo_task:create_task"}
+TASK_CONSUMES  = {"servo": {"joint_command": ("on_joint_command", "claim_overlap")}}
+TASK_EXPOSES   = {"trajectory": ["execute", "cancel", "get_state"]}
+```
+
+`TASK_EXPOSES` define qué puede invocar `task_invoke`, y la firma del método **es** el schema de
+argumentos: se bindean kwargs contra ella y un typo revienta del lado del caller.
+
+### Reglas de ruteo
+
+| Regla | Entrega cuando | La usa |
+|---|---|---|
+| `claim_overlap` | el mensaje nombra un joint que la tarea tiene tomado | `joint_command` |
+| `broadcast` | siempre, a todas las tareas del puerto | `teleop_buttons`, `gripper_command` |
+| `direct` | siempre, pero el puerto es de una sola tarea (una segunda loguea warning) | `path`, `speed` |
+| `by_task_name` | `msg.frame_id == task.name` | comandos cartesianos y twist de EEF |
+
+`by_task_name` usa `frame_id` como dirección y no como frame de coordenadas. El README lo marca
+como legacy y pide no sumar bindings nuevos.
+
+### I/O por deployment
+
+Un deployment que necesita puertos extra **subclasea** el coordinator:
+
+```python
+class _Go2Coordinator(PathFollowingCoordinator):
+    go2_joints: Out[JointState]
+
+blueprint = _Go2Coordinator.blueprint(
+    instance_name="ControlCoordinator",   # los clientes RPC lo buscan por nombre de clase
+    publish_robot_joint_states=True,
+)
+```
+
+Esto depende del fix de refs por IS-A en core (ver [01-arquitectura-core.md](01-arquitectura-core.md)):
+antes la subclase no satisfacía la ref y quedaba en `None` en silencio. Los puertos de las cards
+se validan contra la instancia viva al arrancar, no contra el registry, y si falta uno falla
+`add_task()` diciendo qué anotación agregar.
+
+`TaskConfig.stream_bind` remapea una entrada por instancia, así dos tareas del mismo tipo leen
+puertos distintos.
+
+### Dos vistas del joint state
+
+| Vista | Stream | Lleva | La habilita |
+|---|---|---|---|
+| Agregada | `coordinator_joint_state` | todos los joints, `frame_id="coordinator"` | `publish_joint_state` (default on) |
+| Por robot | `{hardware_id}_joints` | un robot, `frame_id=hardware_id` | `publish_robot_joint_states` + anotación `Out[JointState]` |
+
+Las dos son permanentes y salen de la misma lectura por tick, con nombres canónicos
+`{hardware_id}/{joint}`. Esa es la vista de *control*. Los módulos de conexión (`GO2Connection`,
+`G1WholeBodyConnection`) publican la vista de *dispositivo*: estado crudo al rate del device.
+Se elige por lo que es el consumidor, no por cuántos robots hay.
 
 `benchmarking/` tiene un harness completo: `benchmark.py`, `plant.py`, `gate.py`, `paths.py`,
 `score.py`, `scoring.py`, `tuning.py`, `velocity_profile.py`.
@@ -288,7 +419,7 @@ Capa de adapters de drivers, con registro por plugin (`_registry.py` en cada uno
 hardware/
 ├── adapter_registry.py
 ├── drive_trains/     # unitree_go2, flowbase, transport, mock
-├── manipulators/     # xarm, piper, openarm (+driver), a750, sim, mock
+├── manipulators/     # xarm, piper, openarm (+driver), a750, galaxea_a1z, sim, mock
 ├── sensors/
 │   ├── camera/       # realsense, zed, webcam, gstreamer
 │   └── lidar/fastlio2/   # FAST-LIO2, con cpp/ propio, recorder, pcap_to_db
@@ -297,6 +428,17 @@ hardware/
 
 Cada familia tiene `spec.py` (el protocolo) y `registry.py` (el registro de implementaciones),
 así que agregar hardware nuevo es implementar un adapter y registrarlo.
+
+### Galaxea A1Z: hardware real desde 2026-08
+
+`a6d65f0` sacó al A1Z del estado "solo mock". `manipulators/galaxea_a1z/` tiene `adapter.py`
+(747 líneas), `gs_usb_bus.py` (bus CAN por USB), `config.py` y `_registry.py`, más 868 líneas de
+tests y stubs de tipos del SDK del vendor.
+
+Usa el loop de posición del vendor a 250 Hz, el modelo de gravedad G1Z y el gripper G1Z. El SDK
+**no está publicado en PyPI**: se instala desde un revision fijo de git del vendor, así que la
+instalación no es un `pip install` limpio. Doc en `docs/capabilities/manipulation/a1z.md`, y CLI
+nueva `dimos hardware a1z` (ver [05-cli-y-uso.md](05-cli-y-uso.md)).
 
 ---
 
@@ -340,6 +482,13 @@ Flujo:
 |---|---|
 | `teleop-hosted-go2-transport` | drive + cámara + minimapa + click-to-nav (recomendado) |
 | `teleop-hosted-go2-multicam` | agrega una segunda RealSense, seleccionable por el operador, muxeada en un track de video |
+
+### Quest: control por manos
+
+Desde `eeae9a2` el Quest se puede teleoperar **sin controllers**, con hand tracking. Pinch de
+pulgar + índice engancha la mano y el brazo sigue la muñeca, pinch de nuevo lo suelta. Pinch de
+pulgar + mayor cierra el gripper y soltar lo abre. Hay que habilitar hand tracking en el browser
+del Quest. Blueprint `teleop-quest-hand-xarm7`, módulo `HandTeleopModule` en `quest_extensions.py`.
 
 Otros modos: `quest/` (VR Meta Quest), `keyboard/`, `phone/`. Utilidades: `recorder.py`,
 `report.py`, `stream_stats.py`, `video_stats.py`, `teleop_transforms.py`.
