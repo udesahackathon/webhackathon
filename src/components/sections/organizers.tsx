@@ -2,7 +2,12 @@ import Image from "next/image";
 import { Section, SectionHeading } from "@/components/shared/section";
 import { SocialLinks } from "@/components/shared/social-links";
 import { sectionIds } from "@/content/navigation";
-import { institutionalCredit, organizers, organizersHeading } from "@/content/people";
+import {
+  institutionalCredits,
+  institutionalCreditsHeading,
+  organizers,
+  organizersHeading,
+} from "@/content/people";
 
 export function Organizers() {
   return (
@@ -33,15 +38,42 @@ export function Organizers() {
         ))}
       </div>
 
-      <div className="mt-10 flex items-center gap-3 border-t border-cream/10 pt-8">
-        <Image
-          src={institutionalCredit.logo}
-          alt={institutionalCredit.alt}
-          width={40}
-          height={40}
-          className="h-10 w-10 shrink-0"
-        />
-        <p className="text-sm text-cream/55">{institutionalCredit.text}</p>
+      <div className="mt-10 border-t border-cream/10 pt-8">
+        <p className="mb-4 text-xs uppercase tracking-[0.14em] text-cream/50">
+          {institutionalCreditsHeading}
+        </p>
+        <div className="flex flex-wrap gap-x-8 gap-y-4">
+          {institutionalCredits.map((credit) => {
+            const inner = (
+              <>
+                <Image
+                  src={credit.logo}
+                  alt={credit.alt}
+                  width={40}
+                  height={40}
+                  className="h-10 w-10 shrink-0"
+                />
+                <p className="text-sm text-cream/70">{credit.name}</p>
+              </>
+            );
+
+            return credit.href ? (
+              <a
+                key={credit.name}
+                href={credit.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 transition-opacity hover:opacity-75"
+              >
+                {inner}
+              </a>
+            ) : (
+              <div key={credit.name} className="flex items-center gap-3">
+                {inner}
+              </div>
+            );
+          })}
+        </div>
       </div>
     </Section>
   );

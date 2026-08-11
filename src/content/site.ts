@@ -30,7 +30,6 @@ export const contact = {
   // [FALTA COPY] confirmar dominio de mail definitivo
   sponsorEmail: "naomicouriel@gmail.com",
   instagram: "https://www.instagram.com/ingenieria.udesa/",
-  twitter: "UdeSA",
 };
 
 export const footer = {
