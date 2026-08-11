@@ -14,10 +14,20 @@ export type AboutItem = {
   description: string;
 };
 
+export type NamedSponsor = {
+  name: string;
+  /** Solo si hay algo público para linkear. Nada de logo todavía. */
+  href?: string;
+};
+
 export type SponsorTier = {
   name: string;
   /** Cuántos recuadros "Your logo here" se dibujan en este tier. */
   slots: number;
+  /** Confirmados, pero sin logo todavía (llega después). No llevan "a confirmar". */
+  confirmed?: NamedSponsor[];
+  /** Nombres en conversación, sin firmar. Se muestran marcados "a confirmar". */
+  inConversation?: NamedSponsor[];
 };
 
 export type ScheduleItem = {
@@ -45,4 +55,12 @@ export type Organizer = {
   linkedin: string;
   instagram?: string;
   twitter?: string;
+};
+
+export type InstitutionalCredit = {
+  name: string;
+  /** Ruta dentro de `public/organizers`. */
+  logo: string;
+  alt: string;
+  href?: string;
 };

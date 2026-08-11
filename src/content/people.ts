@@ -1,7 +1,8 @@
-import type { Organizer } from "./types";
+import { contact } from "./site";
+import type { InstitutionalCredit, Organizer } from "./types";
 
 export const organizersHeading = {
-  eyebrow: "Organizadoras",
+  eyebrow: "Organizadores",
   title: "Quién está detrás",
 };
 
@@ -29,10 +30,27 @@ export const organizers: Organizer[] = [
   },
 ];
 
-// Crédito institucional, aparte de las personas. El logo ya viene recortado en
-// círculo con transparencia, así que se muestra tal cual, sin CSS que lo enmascare.
-export const institutionalCredit = {
-  text: "Organizado junto al Departamento de Ingeniería de UdeSA",
-  logo: "/organizers/udesa.png",
-  alt: "Universidad de San Andrés",
-};
+// Créditos institucionales, aparte de las personas. Los logos ya vienen con
+// fondo transparente, así que se muestran tal cual, sin CSS que los enmascare.
+// El "Organizado junto a" va una sola vez arriba de la lista, no repetido por
+// crédito.
+//
+// AIR Club UdeSA (el club de robótica) ayuda a organizar más activamente que
+// el Departamento de Ingeniería, por eso va primero.
+export const institutionalCreditsHeading = "Organizado junto a";
+
+export const institutionalCredits: InstitutionalCredit[] = [
+  {
+    name: "AIR Club UdeSA (AI & Robotics)",
+    logo: "/organizers/air-club.png",
+    alt: "AIR Club UdeSA",
+    href: "https://linktr.ee/AirclubUdeSA",
+  },
+  {
+    name: "Departamento de Ingeniería de UdeSA",
+    logo: "/organizers/udesa.png",
+    alt: "Universidad de San Andrés",
+    // No tienen web propia todavía, así que linkea al Instagram del depto.
+    href: contact.instagram,
+  },
+];

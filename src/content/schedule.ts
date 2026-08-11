@@ -2,15 +2,19 @@ import type { ScheduleItem } from "./types";
 
 export const scheduleHeading = {
   eyebrow: "Cronograma",
-  title: "Cómo va a ser el fin de semana",
+  title: "Cómo van a ser los tres días",
 };
 
+// [FALTA COPY] horarios y el formato del cierre (¿pitches? ¿demo en vivo con
+// los robots? no está decidido) en danza. Solo se ponen los bloques por día,
+// nada de horas puntuales inventadas.
 export const schedule: ScheduleItem[] = [
-  { day: "Viernes 23/10", time: "18:00", title: "Kickoff + presentación de challenges" },
-  { day: "Viernes 23/10", time: "20:00", title: "Cena + arranca la hackathon" },
-  { day: "Sábado 24/10", time: "10:00", title: "Check-in con mentores" },
-  { day: "Sábado 24/10", time: "14:00", title: "Almuerzo" },
-  { day: "Sábado 24/10", time: "18:00", title: "Cierre de código" },
-  { day: "Sábado 24/10", time: "19:00", title: "Pitches finales" },
-  { day: "Sábado 24/10", time: "21:00", title: "Premiación" },
+  {
+    day: "Semana previa",
+    time: "TBA",
+    title: "Jornada de instalación y explicación del sistema, con dimensionalOS",
+  },
+  { day: "Viernes 23/10", time: "TBA", title: "Llegada + kickoff" },
+  { day: "Sábado 24/10", time: "TBA", title: "Día de build, con mentorías y turnos de robot" },
+  { day: "Domingo 25/10", time: "TBA", title: "Cierre + premiación" },
 ];

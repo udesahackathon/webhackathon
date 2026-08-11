@@ -7,14 +7,18 @@ export const aboutHeading = {
 
 export const about: AboutItem[] = [
   {
-    title: "24 horas",
-    description:
-      "Un fin de semana intenso: de kickoff a pitches finales en un solo sprint de 24 horas.",
+    title: "3 días",
+    description: "De viernes a domingo: kickoff, build y cierre del evento.",
   },
   {
-    title: "~15 equipos",
+    title: "~20-25 equipos",
     description:
       "Equipos de hasta 4 personas, con estudiantes de distintas universidades y carreras.",
+  },
+  {
+    title: "Robots de dimensionalOS",
+    description:
+      "Cuadrúpedos Go2 y brazos OpenYAM, en simulación y en hardware real.",
   },
   {
     title: "Prize pool + créditos",

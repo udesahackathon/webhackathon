@@ -14,9 +14,15 @@ export const heroCtaSecondary: Link = {
   href: anchor(sectionIds.schedule),
 };
 
+// Título del hero partido en dos porque llevan tratamiento visual distinto
+// (el segundo va en itálica). Separado de `event.name` porque ese nombre
+// completo se usa aparte, en el header y en la tarjeta del countdown.
+export const heroTitleLead = "Robotics Hackathon";
+export const heroTitleAccent = "x UdeSA";
+
 /** Resumen de tres pasos que va debajo del countdown. */
 export const heroTimeline: TimelineStep[] = [
   { step: "01", label: "Kickoff + challenges" },
-  { step: "02", label: "24hs de build + mentorías" },
+  { step: "02", label: "3 días de build + mentorías" },
   { step: "03", label: "Pitches + premiación" },
 ];

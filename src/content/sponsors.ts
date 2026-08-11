@@ -5,13 +5,25 @@ export const sponsorsHeading = {
   title: "Buscamos marcas que quieran estar cerca de engineers",
 };
 
-// No hay sponsors confirmados todavía. Se dibujan `slots` recuadros vacíos con
-// "Your logo here", a propósito: no inventar nombres ni logos.
+// Los recuadros vacíos con "Your logo here" son para sponsors sin
+// identificar, a propósito: no inventar nombres ni logos ahí.
 //
-// Cuando haya sponsors reales, este es el lugar donde cambia el modelo de
-// datos: cada tier pasa a tener una lista de sponsors (nombre + logo + url) en
-// vez de un número de slots.
+// `confirmed` es un sponsor cerrado, solo falta el logo (llega después).
+// `inConversation` son conversaciones reales en curso, sin firmar, y se
+// marcan "a confirmar". dimensionalOS ya está confirmado, el resto no.
 export const sponsorTiers: SponsorTier[] = [
-  { name: "Powered by", slots: 5 },
-  { name: "Supported by", slots: 4 },
+  {
+    name: "Powered by",
+    slots: 5,
+    confirmed: [{ name: "dimensionalOS", href: "https://github.com/dimensionalOS/dimos" }],
+    inConversation: [{ name: "AWS", href: "https://aws.amazon.com/es/" }],
+  },
+  {
+    name: "Supported by",
+    slots: 4,
+    inConversation: [
+      { name: "Red Bull", href: "https://www.redbull.com/ar-es" },
+      { name: "Área Beta", href: "https://www.areabeta.com.ar/" },
+    ],
+  },
 ];
