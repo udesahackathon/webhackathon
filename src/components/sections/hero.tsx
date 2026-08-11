@@ -3,7 +3,13 @@
 import { motion } from "framer-motion";
 import { SiteHeader } from "@/components/layout/site-header";
 import { Countdown } from "@/components/shared/countdown";
-import { heroCtaPrimary, heroCtaSecondary, heroTimeline } from "@/content/hero";
+import {
+  heroCtaPrimary,
+  heroCtaSecondary,
+  heroTimeline,
+  heroTitleAccent,
+  heroTitleLead,
+} from "@/content/hero";
 import { sectionIds } from "@/content/navigation";
 import { event } from "@/content/site";
 
@@ -58,8 +64,8 @@ export function Hero() {
                 variants={fadeUp}
                 className="max-w-xl text-5xl leading-[0.98] tracking-tight text-cream sm:text-6xl"
               >
-                AI Hackathon{" "}
-                <span className="font-display italic font-normal">@ UdeSA</span>
+                {heroTitleLead}{" "}
+                <span className="font-display italic font-normal">{heroTitleAccent}</span>
               </motion.h1>
 
               <motion.p
@@ -82,6 +88,7 @@ export function Hero() {
                 <li className="font-medium text-cream">{event.dateLabel}</li>
                 <li>{event.location}</li>
                 <li>{event.audience}</li>
+                <li>{event.presentedBy}</li>
               </motion.ul>
 
               <motion.div
